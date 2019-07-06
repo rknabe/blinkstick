@@ -7,9 +7,15 @@ public interface BlinkStick {
 
     void setColor(int r, int g, int b);
 
+    int getColor();
+
+    void setColor(int value);
+
     void setColors(byte[] colorData);
 
     void setAllColors(byte count, byte r, byte g, byte b);
+
+    void setAllColors(byte count, int rgb);
 
     void setColors(Channel channel, byte[] colorData);
 
@@ -17,17 +23,9 @@ public interface BlinkStick {
 
     void setIndexedColor(int channel, int index, int value);
 
-    void setIndexedColor(int index, Color color);
-
     void setRandomColor();
 
     void turnOff();
-
-    int getColor();
-
-    void setColor(int value);
-
-    void setColor(Color color);
 
     String getInfoBlock1();
 

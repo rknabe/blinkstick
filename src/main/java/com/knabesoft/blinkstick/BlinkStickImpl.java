@@ -61,17 +61,6 @@ public class BlinkStickImpl implements BlinkStick {
         setIndexedColor(channel, index, r, g, b);
     }
 
-    /**
-     * Set the indexed color of BlinkStick Pro with Processing color value for channel 0
-     *
-     * @param index Index of the LED
-     * @param color color as int
-     */
-    @Override
-    public void setIndexedColor(int index, Color color) {
-        setIndexedColor(0, index, color.getRed(), color.getGreen(), color.getBlue());
-    }
-
     @Override
     public void setRandomColor() {
         Random random = new Random();
@@ -113,11 +102,6 @@ public class BlinkStickImpl implements BlinkStick {
         int b = value & 0xFF;
 
         setColor(r, g, b);
-    }
-
-    @Override
-    public void setColor(Color color) {
-        setColor(color.rgb());
     }
 
     /**
@@ -305,6 +289,11 @@ public class BlinkStickImpl implements BlinkStick {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setAllColors(byte leds, int rgb) {
+        setAllColors(leds, (byte) ((rgb >> 16) & 0xFF), (byte) ((rgb >> 8) & 0xFF), (byte) (rgb & 0xFF));
     }
 
     @Override
