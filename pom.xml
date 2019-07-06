@@ -14,20 +14,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.3.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.hid4java</groupId>
             <artifactId>hid4java</artifactId>
             <version>0.5.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codeminders</groupId>
@@ -49,7 +38,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>12</release>
+                    <release>8</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -86,27 +75,38 @@
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>console</headerType>
+                            <headerType>gui</headerType>
                             <outfile>target/blinkstick.exe</outfile>
                             <jar>target/blinkstick-1.0-shaded.jar</jar>
                             <errTitle>blinkstick</errTitle>
+                            <icon>led.ico</icon>
                             <classPath>
                                 <mainClass>com.knabesoft.blinkstick.Main</mainClass>
                                 <addDependencies>false</addDependencies>
                                 <preCp>anything</preCp>
                             </classPath>
+                            <singleInstance>
+                                <mutexName>com.knabesoft.blinkstick</mutexName>
+                            </singleInstance>
                             <jre>
-                                <minVersion>1.8.0</minVersion>
+                                <path>C:\Program Files\Java\jre8\bin</path>
+                                <bundledJre64Bit>true</bundledJre64Bit>
+                                <minVersion>8.0.0</minVersion>
+                                <maxVersion>9.0.0</maxVersion>
+                                <runtimeBits>64</runtimeBits>
+                                <initialHeapSize>100</initialHeapSize>
+                                <maxHeapSize>125</maxHeapSize>
                             </jre>
+                            <restartOnCrash>true</restartOnCrash>
                             <versionInfo>
                                 <fileVersion>1.0.0.0</fileVersion>
                                 <txtFileVersion>txt file version?</txtFileVersion>
-                                <fileDescription>a description</fileDescription>
+                                <fileDescription>BlinkStick</fileDescription>
                                 <copyright>KnabeSoft</copyright>
                                 <productVersion>1.0.0.0</productVersion>
                                 <txtProductVersion>txt product version</txtProductVersion>
-                                <productName>Blinkstick</productName>
-                                <internalName>Blickstick</internalName>
+                                <productName>BlinkStick</productName>
+                                <internalName>BlickStick</internalName>
                                 <originalFilename>blinkstick.exe</originalFilename>
                             </versionInfo>
                         </configuration>

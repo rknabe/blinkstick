@@ -3,30 +3,28 @@ package com.knabesoft.blinkstick;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Main {
+public final class Main {
 
     public static void main(String... args) {
-        BlinkStick blinkStick = getBlinkStick();
-        if (blinkStick != null) {
-            try {
+        try {
+            BlinkStick blinkStick = Usb.findFirstBlinkStick().orElse(null);
+            if (blinkStick != null) {
                 Rectangle rectangle = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
                 Robot robot = new Robot();
-
-                System.out.println("starting");
                 blinkStick.setAllColors((byte) 32, (byte) 0, (byte) 0, (byte) 0);
                 BufferedImage img;
-                for (int i = 0; i < 1000000; i++) {
+                do {
                     img = robot.createScreenCapture(rectangle);
                     int avgColor = getAverageColor(img);
                     blinkStick.setAllColors((byte) 32, avgColor);
                     Thread.sleep(200);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                blinkStick.turnOff();
+                while (true);
             }
+        } catch (Throwable t) {
+            System.exit(1);
         }
+        System.exit(1);
     }
 
     private static int getAverageColor(BufferedImage img) {
@@ -36,9 +34,5 @@ public class Main {
         g2d.drawImage(scaledImg, 0, 0, 1, 1, null);
         g2d.dispose();
         return img2.getRGB(0, 0);
-    }
-
-    private static BlinkStick getBlinkStick() {
-        return Usb.findFirstBlinkStick().orElse(null);
     }
 }
