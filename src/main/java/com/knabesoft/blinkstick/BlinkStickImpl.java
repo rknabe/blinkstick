@@ -293,7 +293,7 @@ public class BlinkStickImpl implements BlinkStick {
 
     @Override
     public void setAllColors(byte leds, int rgb) {
-        setAllColors(leds, (byte) ((rgb >> 16) & 0xFF), (byte) ((rgb >> 8) & 0xFF), (byte) (rgb & 0xFF));
+        setAllColors(leds, (byte) ((rgb >> 16) & 0x000000FF), (byte) ((rgb >> 8) & 0x000000FF), (byte) (rgb & 0x000000FF));
     }
 
     @Override
@@ -303,8 +303,8 @@ public class BlinkStickImpl implements BlinkStick {
         data[i++] = determineReportId(data.length - 2);
         data[i++] = Channel.R.asByte();
         for (; i < data.length; ) {
-            data[i++] = r;
             data[i++] = g;
+            data[i++] = r;
             data[i++] = b;
         }
 

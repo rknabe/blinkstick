@@ -2,6 +2,7 @@ package com.knabesoft.blinkstick;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public final class Main {
 
@@ -15,16 +16,33 @@ public final class Main {
                 BufferedImage img;
                 do {
                     img = robot.createScreenCapture(rectangle);
-                    int avgColor = getAverageColor(img);
-                    blinkStick.setAllColors((byte) 32, avgColor);
+                    byte[] avgColor = getAverageColor2(img);
+                    blinkStick.setAllColors((byte) 32, avgColor[0], avgColor[1], avgColor[2]);
+
+                    //int avgColor = getAverageColor(img);
+                    //blinkStick.setAllColors((byte) 32, avgColor);
+
                     Thread.sleep(200);
                 }
                 while (true);
             }
         } catch (Throwable t) {
+            t.printStackTrace();
             System.exit(1);
         }
         System.exit(1);
+    }
+
+    private static byte[] getAverageColor2(BufferedImage img) {
+        int[] screenData = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+        long sumr = 0, sumg = 0, sumb = 0;
+        for (int color : screenData) {
+            sumr += (color >> 16) & 0x000000FF;
+            sumg += (color >> 8) & 0x000000FF;
+            sumb += (color) & 0x000000FF;
+        }
+        int num = screenData.length;
+        return new byte[]{(byte) (sumr / num), (byte) (sumg / num), (byte) (sumb / num)};
     }
 
     private static int getAverageColor(BufferedImage img) {
