@@ -5,7 +5,7 @@ import com.codeminders.hidapi.HIDDevice;
 import java.util.Random;
 
 public class BlinkStickImpl implements BlinkStick {
-    private HIDDevice device;
+    private final HIDDevice device;
 
     BlinkStickImpl(HIDDevice device) {
         this.device = device;
@@ -302,7 +302,7 @@ public class BlinkStickImpl implements BlinkStick {
         int i = 0;
         data[i++] = determineReportId(data.length - 2);
         data[i++] = Channel.R.asByte();
-        for (; i < data.length; ) {
+        while (i < data.length) {
             data[i++] = g;
             data[i++] = r;
             data[i++] = b;
