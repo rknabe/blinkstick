@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.hid4java</groupId>
             <artifactId>hid4java</artifactId>
-            <version>0.5.1</version>
+            <version>0.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.codeminders</groupId>
@@ -38,7 +38,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>8</release>
+                    <release>14</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -89,10 +89,10 @@
                                 <mutexName>com.knabesoft.blinkstick</mutexName>
                             </singleInstance>
                             <jre>
-                                <path>C:\Program Files\Java\jre8\bin</path>
+                                <path>C:\Program Files\Java\jdk14\bin</path>
                                 <bundledJre64Bit>true</bundledJre64Bit>
                                 <minVersion>8.0.0</minVersion>
-                                <maxVersion>9.0.0</maxVersion>
+                                <maxVersion>14.0.0</maxVersion>
                                 <runtimeBits>64</runtimeBits>
                                 <initialHeapSize>100</initialHeapSize>
                                 <maxHeapSize>125</maxHeapSize>
