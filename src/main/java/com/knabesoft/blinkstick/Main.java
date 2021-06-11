@@ -1,8 +1,5 @@
 package com.knabesoft.blinkstick;
 
-import org.hid4java.*;
-import org.hid4java.event.HidServicesEvent;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -67,7 +64,7 @@ public final class Main {
         return colors;
     }
 
-    private byte[] getAverageColor(BufferedImage img) {
+    private static byte[] getAverageColor(BufferedImage img) {
         Image scaledImg = img.getScaledInstance(1, 1, Image.SCALE_AREA_AVERAGING);
         BufferedImage img2 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img2.createGraphics();
