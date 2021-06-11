@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.hid4java</groupId>
             <artifactId>hid4java</artifactId>
-            <version>0.6.0</version>
+            <version>0.7.0</version>
         </dependency>
         <dependency>
             <groupId>com.codeminders</groupId>
@@ -68,7 +68,6 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.25</version>
                 <executions>
                     <execution>
                         <id>l4j-clui</id>
@@ -91,10 +90,10 @@
                                 <mutexName>com.knabesoft.blinkstick</mutexName>
                             </singleInstance>
                             <jre>
-                                <path>C:\Program Files\Java\jdk14\bin</path>
+                                <path>C:\Program Files\Java\jdk16\bin</path>
                                 <bundledJre64Bit>true</bundledJre64Bit>
                                 <minVersion>8.0.0</minVersion>
-                                <maxVersion>14.0.0</maxVersion>
+                                <maxVersion>17.0.0</maxVersion>
                                 <runtimeBits>64</runtimeBits>
                                 <initialHeapSize>100</initialHeapSize>
                                 <maxHeapSize>125</maxHeapSize>

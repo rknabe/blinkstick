@@ -1,5 +1,8 @@
 package com.knabesoft.blinkstick;
 
+import org.hid4java.*;
+import org.hid4java.event.HidServicesEvent;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -8,6 +11,25 @@ public final class Main {
 
     public static void main(String... args) {
         try {
+            // Configure to use custom specification
+            HidServicesSpecification hidServicesSpecification = new HidServicesSpecification();
+
+            // Use the v0.7.0 manual start feature to get immediate attach events
+            //hidServicesSpecification..setAutoStart(false);
+
+            // Get HID services using custom specification
+            HidServices hidServices = HidManager.getHidServices(hidServicesSpecification);
+            //hidServices.addHidServicesListener(listener);
+
+            // Manually start the services to get attachment event
+            hidServices.start();
+
+            // Provide a list of attached devices
+            for (HidDevice hidDevice : hidServices.getAttachedHidDevices()) {
+                System.out.println(hidDevice);
+            }
+
+
             final BlinkStick blinkStick = Usb.findFirstBlinkStick().orElse(null);
             if (blinkStick != null) {
                 String desc = blinkStick.getProductDescription();
@@ -56,9 +78,9 @@ public final class Main {
             sumb += (color) & 0x000000FF;
         }
         int num = screenData.length;
-        colors[0]= (byte) (sumr / num);
-        colors[1]= (byte) (sumg / num);
-        colors[2]= (byte) (sumb / num);
+        colors[0] = (byte) (sumr / num);
+        colors[1] = (byte) (sumg / num);
+        colors[2] = (byte) (sumb / num);
         return colors;
     }
 
