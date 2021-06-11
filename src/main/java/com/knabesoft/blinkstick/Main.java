@@ -66,6 +66,7 @@ public final class Main {
     }
 
     private static void clearAll(BlinkStick blinkStick) {
+        System.out.println("clearing");
         blinkStick.setAllColors((byte) 32, (byte) 0, (byte) 0, (byte) 0);
     }
 
