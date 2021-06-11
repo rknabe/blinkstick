@@ -1,27 +1,32 @@
 package com.knabesoft.blinkstick;
 
-import com.codeminders.hidapi.HIDDevice;
+
+import org.hid4java.HidDevice;
 
 import java.util.Random;
 
 public class BlinkStickImpl implements BlinkStick {
-    private final HIDDevice device;
+    private final HidDevice device;
 
-    BlinkStickImpl(HIDDevice device) {
+    BlinkStickImpl(HidDevice device) throws Exception {
         this.device = device;
+        boolean isOpen = device.open();
+        if (!isOpen) {
+            throw new Exception("Could not open device");
+        }
     }
 
     /**
      * Set the color of the device with separate r, g and b byte values
      *
      * @param r red byte color value 0..255
-     * @param g gree byte color value 0..255
+     * @param g green byte color value 0..255
      * @param b blue byte color value 0..255
      */
     @Override
     public void setColor(int r, int g, int b) {
         try {
-            device.sendFeatureReport(new byte[]{1, (byte) r, (byte) g, (byte) b});
+            device.sendFeatureReport(new byte[]{(byte) r, (byte) g, (byte) b}, (byte) 1);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +44,7 @@ public class BlinkStickImpl implements BlinkStick {
     @Override
     public void setIndexedColor(int channel, int index, int r, int g, int b) {
         try {
-            device.sendFeatureReport(new byte[]{5, (byte) channel, (byte) index, (byte) r, (byte) g, (byte) b});
+            device.sendFeatureReport(new byte[]{(byte) channel, (byte) index, (byte) r, (byte) g, (byte) b}, (byte) 5);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -74,13 +79,13 @@ public class BlinkStickImpl implements BlinkStick {
 
     @Override
     public int getColor() {
-        byte[] data = new byte[33];
-        data[0] = 1;// First byte is ReportID
+        byte[] data = new byte[32];
+        //data[0] = 1;// First byte is ReportID
 
         try {
-            int read = device.getFeatureReport(data);
+            int read = device.getFeatureReport(data, (byte) 1);
             if (read > 0) {
-                return (255 << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+                return (255 << 24) | (data[0] << 16) | (data[1] << 8) | data[2];
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -110,15 +115,15 @@ public class BlinkStickImpl implements BlinkStick {
      * @param id InfoBlock id, should be 1 or 2 as only supported info blocks
      */
     private String getInfoBlock(int id) {
-        byte[] data = new byte[33];
-        data[0] = (byte) (id + 1);
+        byte[] data = new byte[32];
+        //data[0] = (byte) (id + 1);
 
         StringBuilder result = new StringBuilder();
         try {
-            int read = device.getFeatureReport(data);
+            int read = device.getFeatureReport(data, (byte) 1);
             if (read > 0) {
-                for (int i = 1; i < data.length; i++) {
-                    result.append((char) data[i]);
+                for (byte datum : data) {
+                    result.append((char) datum);
                 }
             }
         } catch (Exception e) {
@@ -163,19 +168,19 @@ public class BlinkStickImpl implements BlinkStick {
             throw new IllegalArgumentException("BlinkStick devices supports setting user strings for InfoBlock 1 or 2 as only");
 
         char[] charArray = value.toCharArray();
-        byte[] data = new byte[33];
-        data[0] = (byte) (id + 1);
+        byte[] data = new byte[32];
+        //data[0] = (byte) (id + 1);
 
         for (int i = 0; i < charArray.length; i++) {
-            if (i > 32) {
+            if (i > 31) {
                 break;
             }
 
-            data[i + 1] = (byte) charArray[i];
+            data[i] = (byte) charArray[i];
         }
 
         try {
-            device.sendFeatureReport(data);
+            device.sendFeatureReport(data, (byte) (id + 1));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -184,7 +189,7 @@ public class BlinkStickImpl implements BlinkStick {
     @Override
     public String getManufacturer() {
         try {
-            return device.getManufacturerString();
+            return device.getManufacturer();
         } catch (Exception e) {
             return "<unknown manufacturer>";
         }
@@ -193,7 +198,7 @@ public class BlinkStickImpl implements BlinkStick {
     @Override
     public String getProductDescription() {
         try {
-            return device.getProductString();
+            return device.getProduct();
         } catch (Exception e) {
             return "<unknown product>";
         }
@@ -202,7 +207,7 @@ public class BlinkStickImpl implements BlinkStick {
     @Override
     public String getSerial() {
         try {
-            return device.getSerialNumberString();
+            return device.getSerialNumber();
         } catch (Exception e) {
             return "<unknown serial#>";
         }
@@ -275,8 +280,7 @@ public class BlinkStickImpl implements BlinkStick {
         byte leds = determineMaxLeds(colorData.length);
         byte[] data = new byte[leds * 3 + 2];
 
-        data[0] = determineReportId(colorData.length);
-        data[1] = channel.asByte();
+        data[0] = channel.asByte();
 
         System.arraycopy(colorData, 0, data, 2, Math.min(colorData.length, data.length - 2));
 
@@ -285,7 +289,7 @@ public class BlinkStickImpl implements BlinkStick {
         }
 
         try {
-            device.sendFeatureReport(data);
+            device.sendFeatureReport(data, determineReportId(colorData.length));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -298,9 +302,8 @@ public class BlinkStickImpl implements BlinkStick {
 
     @Override
     public void setAllColors(byte leds, byte r, byte g, byte b) {
-        byte[] data = new byte[leds * 3 + 2];
+        byte[] data = new byte[leds * 3 + 1];
         int i = 0;
-        data[i++] = determineReportId(data.length - 2);
         data[i++] = Channel.R.asByte();
         while (i < data.length) {
             data[i++] = g;
@@ -309,7 +312,7 @@ public class BlinkStickImpl implements BlinkStick {
         }
 
         try {
-            device.sendFeatureReport(data);
+            device.sendFeatureReport(data, determineReportId(data.length - 1));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -317,13 +320,12 @@ public class BlinkStickImpl implements BlinkStick {
 
     @Override
     public Mode getMode() {
-        byte[] data = new byte[2];
-        data[0] = ReportId.ModeReportId.value();
+        byte[] data = new byte[1];
 
         try {
-            int read = device.getFeatureReport(data);
+            int read = device.getFeatureReport(data, ReportId.ModeReportId.value());
             if (read > 0) {
-                return Mode.fromByte(data[1]);
+                return Mode.fromByte(data[0]);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -337,7 +339,7 @@ public class BlinkStickImpl implements BlinkStick {
         Mode currentMode = getMode();
         if (currentMode != mode) {
             try {
-                device.sendFeatureReport(new byte[]{ReportId.ModeReportId.value(), mode.asByte()});
+                device.sendFeatureReport(new byte[]{ReportId.ModeReportId.value(), mode.asByte()}, (byte) 1);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

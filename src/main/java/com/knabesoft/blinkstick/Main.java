@@ -11,26 +11,8 @@ public final class Main {
 
     public static void main(String... args) {
         try {
-            // Configure to use custom specification
-            HidServicesSpecification hidServicesSpecification = new HidServicesSpecification();
-
-            // Use the v0.7.0 manual start feature to get immediate attach events
-            //hidServicesSpecification..setAutoStart(false);
-
-            // Get HID services using custom specification
-            HidServices hidServices = HidManager.getHidServices(hidServicesSpecification);
-            //hidServices.addHidServicesListener(listener);
-
-            // Manually start the services to get attachment event
-            hidServices.start();
-
-            // Provide a list of attached devices
-            for (HidDevice hidDevice : hidServices.getAttachedHidDevices()) {
-                System.out.println(hidDevice);
-            }
-
-
-            final BlinkStick blinkStick = Usb.findFirstBlinkStick().orElse(null);
+            Usb usb = new Usb();
+            final BlinkStick blinkStick = usb.findFirstBlinkStick();
             if (blinkStick != null) {
                 String desc = blinkStick.getProductDescription();
                 System.out.println(desc);
