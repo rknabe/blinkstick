@@ -1,6 +1,5 @@
 package com.knabesoft.blinkstick;
 
-
 import org.hid4java.HidDevice;
 
 import java.util.Random;

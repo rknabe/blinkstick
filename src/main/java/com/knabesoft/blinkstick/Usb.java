@@ -5,15 +5,8 @@ import org.hid4java.HidManager;
 import org.hid4java.HidServices;
 import org.hid4java.HidServicesSpecification;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
-
 public final class Usb {
-    private HidServices hidServices = null;
+    private final HidServices hidServices;
 
     public Usb() {
         // Configure to use custom specification
@@ -41,6 +34,4 @@ public final class Usb {
         }
         return null;
     }
-
-
 }
