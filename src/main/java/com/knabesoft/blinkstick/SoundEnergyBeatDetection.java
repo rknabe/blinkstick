@@ -22,32 +22,29 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SoundEnergyBeatDetection {
+    private AudioInput song;
+    private BeatDetect beat;
+    private BeatDetect freqBeat;
+    private final ColorChangeListener colorChangeListener;
+    private final BlockingQueue<Runnable> blockingQueue = new LinkedBlockingQueue<>(10);
 
-    Minim minim;
-    AudioInput song;
-    BeatDetect beat;
-    BeatDetect freqBeat;
-    BeatListener bl;
-    ColorChangeListener colorChangeListener;
-    BlockingQueue<Runnable> blockingQueue = new LinkedBlockingQueue<>(10);
-
-    volatile Color defaultColor = Color.RED;
-    volatile boolean exit = false;
-    volatile boolean threshold1 = false;
-    volatile boolean threshold2 = false;
-    volatile boolean enabled = true;
-    volatile boolean colorEnabled = true;
-    volatile float eRadius;
-    volatile float r = 0;
-    volatile float b = 0;
-    volatile float g = 0;
-    List<Color> rainbow = new ArrayList<>();
-    float dynamicRangeStart = -1;
-    float dynamicRangeEnd = -1;
+    private volatile Color defaultColor = Color.RED;
+    private volatile boolean exit = false;
+    private volatile boolean threshold1 = false;
+    private volatile boolean threshold2 = false;
+    private volatile boolean enabled = true;
+    private volatile boolean colorEnabled = true;
+    private volatile float eRadius;
+    private volatile float r = 0;
+    private volatile float b = 0;
+    private volatile float g = 0;
+    private final List<Color> rainbow = new ArrayList<>();
+    private float dynamicRangeStart = -1;
+    private float dynamicRangeEnd = -1;
 
     public SoundEnergyBeatDetection(ColorChangeListener colorChangeListener) {
         this.colorChangeListener = colorChangeListener;
-        setup();
+       // setup();
     }
 
     class BeatListener implements AudioListener {
@@ -88,7 +85,7 @@ public class SoundEnergyBeatDetection {
         //main.initialize();
         //output = System.out;//main.getOutputStream();
 
-        minim = new Minim(this);
+        Minim minim = new Minim(this);
         song = minim.getLineIn(Minim.STEREO, 2048);//
 
         // song =
@@ -104,7 +101,7 @@ public class SoundEnergyBeatDetection {
         freqBeat = new BeatDetect(song.bufferSize(), song.sampleRate());
         freqBeat.setSensitivity(100);
 
-        bl = new BeatListener(song);
+        BeatListener bl = new BeatListener(song);
 
         eRadius = 500;
 
@@ -427,9 +424,8 @@ public class SoundEnergyBeatDetection {
         return new Color(a << 24 | r << 16 | g << 8 | b);
     }
 
-    static public void main(String[] passedArgs) {
-        //SoundEnergyBeatDetection beatDetection = new SoundEnergyBeatDetection();
-        // beatDetection.setup();
+    public boolean getExit() {
+        return exit;
     }
 
     // Obtain the image URL

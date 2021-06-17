@@ -1,6 +1,9 @@
 package com.knabesoft.blinkstick;
 
-public interface BlinkStick extends ColorChangeListener {
+import org.hid4java.HidServicesListener;
+import org.hid4java.event.HidServicesEvent;
+
+public interface BlinkStick extends ColorChangeListener, HidServicesListener {
     Mode getMode();
 
     void setMode(Mode mode);
@@ -40,4 +43,16 @@ public interface BlinkStick extends ColorChangeListener {
     String getProductDescription();
 
     String getSerial();
+
+    @Override
+    void colorChanged(int r, int g, int b, float a);
+
+    @Override
+    void hidDeviceAttached(HidServicesEvent hidServicesEvent);
+
+    @Override
+    void hidDeviceDetached(HidServicesEvent hidServicesEvent);
+
+    @Override
+    void hidFailure(HidServicesEvent hidServicesEvent);
 }

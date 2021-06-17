@@ -1,6 +1,7 @@
 package com.knabesoft.blinkstick;
 
 import org.hid4java.HidDevice;
+import org.hid4java.event.HidServicesEvent;
 
 import java.util.Random;
 
@@ -349,5 +350,21 @@ public class BlinkStickImpl implements BlinkStick {
     public void colorChanged(int r, int g, int b, float a) {
         //System.out.println(String.format("r:%d, g:%d, b:%d, a:%f", r, g, b, a));
         setAllColors((byte) 32, (byte) r, (byte) g, (byte) b);
+    }
+
+    @Override
+    public void hidDeviceAttached(HidServicesEvent hidServicesEvent) {
+        //TODO: compare to active device
+        System.out.println("Attached:" + hidServicesEvent.getHidDevice().toString());
+    }
+
+    @Override
+    public void hidDeviceDetached(HidServicesEvent hidServicesEvent) {
+        System.out.println("Detached:" + hidServicesEvent.getHidDevice().toString());
+    }
+
+    @Override
+    public void hidFailure(HidServicesEvent hidServicesEvent) {
+        System.out.println("Failure:" + hidServicesEvent.getHidDevice().toString());
     }
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public final class Main {
+    private static SoundEnergyBeatDetection beatDetection;
 
     public static void main(String... args) {
         try {
@@ -15,24 +16,22 @@ public final class Main {
                 System.out.println(desc);
                 System.out.println(blinkStick.getSerial());
                 System.out.println(blinkStick.getManufacturer());
-                System.out.println(blinkStick.getInfoBlock1());
-                System.out.println(blinkStick.getInfoBlock2());
-                System.out.println(blinkStick.getMode());
                 clearAll(blinkStick);
                 Thread hook = new Thread(() -> clearAll(blinkStick));
                 Runtime.getRuntime().addShutdownHook(hook);
 
-                SoundEnergyBeatDetection beatDetection = new SoundEnergyBeatDetection(blinkStick);
-                do {
-                    Thread.sleep(5000);
-                }
-                while (true);
+                beatDetection = new SoundEnergyBeatDetection(blinkStick);
+                beatDetection.setup();
+               // do {
+              //      Thread.sleep(5000);
+               // }
+               // while (!beatDetection.getExit());
             }
         } catch (Throwable t) {
             t.printStackTrace();
             System.exit(1);
         }
-        System.exit(1);
+       // System.exit(1);
     }
 
     public static void main2(String... args) {

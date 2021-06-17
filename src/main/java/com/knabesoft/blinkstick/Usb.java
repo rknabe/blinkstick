@@ -29,7 +29,9 @@ public final class Usb {
             //System.out.println(hidDevice);
             Device device = new Device(hidDevice.getManufacturer(), hidDevice.getProduct(), hidDevice.getSerialNumber(), hidDevice.getVendorId(), hidDevice.getProductId());
             if (device.isBlinkStick()) {
-                return new BlinkStickImpl(hidDevice);
+                BlinkStick blinkStick = new BlinkStickImpl(hidDevice);
+                hidServices.addHidServicesListener(blinkStick);
+                return blinkStick;
             }
         }
         return null;
