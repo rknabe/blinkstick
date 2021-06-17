@@ -345,4 +345,9 @@ public class BlinkStickImpl implements BlinkStick {
         }
     }
 
+    @Override
+    public void colorChanged(int r, int g, int b, float a) {
+        //System.out.println(String.format("r:%d, g:%d, b:%d, a:%f", r, g, b, a));
+        setAllColors((byte) 32, (byte) r, (byte) g, (byte) b);
+    }
 }

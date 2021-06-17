@@ -1,6 +1,6 @@
 package com.knabesoft.blinkstick;
 
-public interface BlinkStick {
+public interface BlinkStick extends ColorChangeListener {
     Mode getMode();
 
     void setMode(Mode mode);

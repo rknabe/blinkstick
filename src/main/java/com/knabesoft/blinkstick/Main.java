@@ -15,6 +15,38 @@ public final class Main {
                 System.out.println(desc);
                 System.out.println(blinkStick.getSerial());
                 System.out.println(blinkStick.getManufacturer());
+                System.out.println(blinkStick.getInfoBlock1());
+                System.out.println(blinkStick.getInfoBlock2());
+                System.out.println(blinkStick.getMode());
+                clearAll(blinkStick);
+                Thread hook = new Thread(() -> clearAll(blinkStick));
+                Runtime.getRuntime().addShutdownHook(hook);
+
+                SoundEnergyBeatDetection beatDetection = new SoundEnergyBeatDetection(blinkStick);
+                do {
+                    Thread.sleep(5000);
+                }
+                while (true);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(1);
+    }
+
+    public static void main2(String... args) {
+        try {
+            Usb usb = new Usb();
+            final BlinkStick blinkStick = usb.findFirstBlinkStick();
+            if (blinkStick != null) {
+                String desc = blinkStick.getProductDescription();
+                System.out.println(desc);
+                System.out.println(blinkStick.getSerial());
+                System.out.println(blinkStick.getManufacturer());
+                System.out.println(blinkStick.getInfoBlock1());
+                System.out.println(blinkStick.getInfoBlock2());
+                System.out.println(blinkStick.getMode());
                 Rectangle rectangle = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
                 Robot robot = new Robot();
                 byte[] colors = new byte[]{(byte) (0), (byte) (0), (byte) (0)};
@@ -47,6 +79,11 @@ public final class Main {
     private static void clearAll(BlinkStick blinkStick) {
         System.out.println("clearing");
         blinkStick.setAllColors((byte) 32, (byte) 0, (byte) 0, (byte) 0);
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static byte[] getAverageColor2(BufferedImage img, byte[] colors) {
