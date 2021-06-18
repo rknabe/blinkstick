@@ -93,13 +93,12 @@ public class SoundEnergyBeatDetection {
         // 2048);
         // song.play();
 
-        // a beat detection object song SOUND_ENERGY mode with a sensitivity of
-        // 10 milliseconds
+        // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
         beat = new BeatDetect();
-        beat.setSensitivity(100);
+        beat.setSensitivity(10);
 
         freqBeat = new BeatDetect(song.bufferSize(), song.sampleRate());
-        freqBeat.setSensitivity(100);
+        freqBeat.setSensitivity(10);
 
         BeatListener bl = new BeatListener(song);
 

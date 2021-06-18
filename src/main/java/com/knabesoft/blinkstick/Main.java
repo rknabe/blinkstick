@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public final class Main {
-    private static SoundEnergyBeatDetection beatDetection;
 
     public static void main(String... args) {
         try {
@@ -20,7 +19,7 @@ public final class Main {
                 Thread hook = new Thread(() -> clearAll(blinkStick));
                 Runtime.getRuntime().addShutdownHook(hook);
 
-                beatDetection = new SoundEnergyBeatDetection(blinkStick);
+                SoundEnergyBeatDetection beatDetection = new SoundEnergyBeatDetection(blinkStick);
                 beatDetection.setup();
                // do {
               //      Thread.sleep(5000);
